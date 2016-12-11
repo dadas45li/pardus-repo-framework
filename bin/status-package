@@ -1,0 +1,14 @@
+#!/usr/bin/python
+import sys
+import os
+veri=""
+liste = []
+
+dosya=open(sys.argv[1])
+while (veri != "--veri--" ):
+  veri= dosya.readline()
+  if "\n" not in veri:
+    exit()
+  if str(sys.argv[2]) in veri:
+    veri=veri.split(":")
+    print veri[1]
