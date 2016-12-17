@@ -1,28 +1,30 @@
 #!/bin/bash
-cd /srv/ftp/pts/
-apt-ftparchive -a amd64 packages pool/main >$1/Packages.main64
-apt-ftparchive -a i386 packages pool/main >$1/Packages.main32
-apt-ftparchive -a amd64 packages pool/contrib >$1/Packages.con64
-apt-ftparchive -a i386 packages pool/contrib >$1/Packages.con32
-apt-ftparchive -a amd64 packages pool/non-free >$1/Packages.non64
-apt-ftparchive -a i386 packages pool/non-free >$1/Packages.non32
+cd /srv/ftp/pardus/
+mkdir -p /home/app/index
+apt-ftparchive -a amd64 packages pool/main > /home/app/index/Packages.main64
+apt-ftparchive -a i386 packages pool/main > /home/app/index/Packages.main32
+apt-ftparchive -a amd64 packages pool/contrib > /home/app/index/Packages.con64
+apt-ftparchive -a i386 packages pool/contrib > /home/app/index/Packages.con32
+apt-ftparchive -a amd64 packages pool/non-free > /home/app/index/Packages.non64
+apt-ftparchive -a i386 packages pool/non-free > /home/app/index/Packages.non32
 #Packages oluşturuldu. Packages kopyalanacak
-mkdir -p $1/Packages.main64 $1/dists/main/binary-amd64/
-mkdir -p $1/Packages.main32 $1/dists/main/binary-i386/
-mkdir -p $1/Packages.non64 $1/dists/non-free/binary-amd64/
-mkdir -p $1/Packages.non32 $1/dists/non-free/binary-i386/
-mkdir -p $1/Packages.con64 $1/dists/contrib/binary-amd64/
-mkdir -p $1/Packages.con32 $1/dists/contrib/binary-i386/
+mkdir -p /home/app/index/dists/main/binary-amd64/
+mkdir -p /home/app/index/dists/main/binary-i386/
+mkdir -p /home/app/index/dists/non-free/binary-amd64/
+mkdir -p /home/app/index/dists/non-free/binary-i386/
+mkdir -p /home/app/index/dists/contrib/binary-amd64/
+mkdir -p /home/app/index/dists/contrib/binary-i386/
 #kopyala
-cp -f $1/Packages.main64 $1/dists/main/binary-amd64/Packages
-cp -f $1/Packages.main32 $1/dists/main/binary-i386/Packages
-cp -f $1/Packages.non64 $1/dists/non-free/binary-amd64/Packages
-cp -f $1/Packages.non32 $1/dists/non-free/binary-i386/Packages
-cp -f $1/Packages.con64 $1/dists/contrib/binary-amd64/Packages
-cp -f $1/Packages.con32 $1/dists/contrib/binary-i386/Packages
-gzip $1/dists/main/binary-amd64/Packages
-gzip $1/dists/main/binary-i386/Packages
-gzip $1/dists/non-free/binary-amd64/Packages
-gzip $1/dists/non-free/binary-i386/Packages
-gzip $1/dists/condrib/binary-amd64/Packages
-gzip $1/dists/contrib/binary-i386/Packages
+cp -f /home/app/index/Packages.main64 /home/app/index/dists/main/binary-amd64/Packages
+cp -f /home/app/index/Packages.main32 /home/app/index/dists/main/binary-i386/Packages
+cp -f /home/app/index/Packages.non64 /home/app/index/dists/non-free/binary-amd64/Packages
+cp -f /home/app/index/Packages.non32 /home/app/index/dists/non-free/binary-i386/Packages
+cp -f /home/app/index/Packages.con64 /home/app/index/dists/contrib/binary-amd64/Packages
+cp -f /home/app/index/Packages.con32 /home/app/index/dists/contrib/binary-i386/Packages
+gzip /home/app/index/dists/main/binary-amd64/Packages
+gzip /home/app/index/dists/main/binary-i386/Packages
+gzip /home/app/index/dists/non-free/binary-amd64/Packages
+gzip /home/app/index/dists/non-free/binary-i386/Packages
+gzip /home/app/index/dists/condrib/binary-amd64/Packages
+gzip /home/app/index/dists/contrib/binary-i386/Packages
+cp -rf /home/app/index/* /srv/ftp/pardus/
