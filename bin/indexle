@@ -25,6 +25,6 @@ gzip /home/app/index/dists/main/binary-amd64/Packages
 gzip /home/app/index/dists/main/binary-i386/Packages
 gzip /home/app/index/dists/non-free/binary-amd64/Packages
 gzip /home/app/index/dists/non-free/binary-i386/Packages
-gzip /home/app/index/dists/condrib/binary-amd64/Packages
+gzip /home/app/index/dists/contrib/binary-amd64/Packages
 gzip /home/app/index/dists/contrib/binary-i386/Packages
 cp -rf /home/app/index/* /srv/ftp/pardus/
