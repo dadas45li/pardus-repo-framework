@@ -1,5 +1,10 @@
 #!/bin/bash
 dizin=$(pwd)
+if [ "$1" == "-t" ]
+then
+cd $2
+dpkg -b $(pwd)
+else
 rm -rf ~/.undeb/ 
 mkdir ~/.undeb/
 cp -prf $1 ~/.undeb/
@@ -17,3 +22,4 @@ tar -xf ./data.tar.*
 rm -rf ./data.tar.*
 mv ~/.undeb/ $dizin
 mv $dizin/.undeb/ $dizin/$2
+fi
