@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "Begin indexing" >> /srv/ftp/pardus/dists/index.log
+date >>  /srv/ftp/pardus/dists/index.log
 cd /srv/ftp/pardus/
 mkdir -p /home/app/index
 apt-ftparchive -a amd64 packages pool/main > /home/app/index/Packages.main64
@@ -28,3 +30,6 @@ gzip /home/app/index/dists/non-free/binary-i386/Packages
 gzip /home/app/index/dists/contrib/binary-amd64/Packages
 gzip /home/app/index/dists/contrib/binary-i386/Packages
 cp -rf /home/app/index/* /srv/ftp/pardus/
+echo "Finish indexing" >> /srv/ftp/pardus/dists/index.log
+date >>  /srv/ftp/pardus/dists/index.log
+echo "" >> /srv/ftp/pardus/dists/index.log
