@@ -4,22 +4,35 @@
 int dosya_cek(char *dir);
 int write_control(char *name);
 int make_control(char *line);
+int package_file(char *name);
+int copydeb(char *name);
+char version[50];
+char arch[50];
 int main(int argc, char *argv[]){
   char dir[50]="/var/lib/dpkg/info/";
   strcat(dir,argv[1]);
   strcat(dir,".list");
   //open file for reading
-  system("rm -rf ~/.repack/");
+  printf("Remove old workspace\n");
+  system("rm -rf ~/.repack/ ");
   //new workspace
+  printf("create new workspace\n");
   system("mkdir ~/.repack/"); 
-  system("mkdir ~/.repack/DEBIAN");
+  system("mkdir ~/.repack/DEBIAN ");
   //copy files
   int i = dosya_cek(dir);
-  printf("Copied %d files\n",i);
+  printf("Copiy %d files\n",i);
   //create control file
   i = write_control(argv[1]);
   printf("Find %d lines\n",i);
-  return 0;
+  //copy package files
+  i = package_file(argv[1]);
+  printf("Copy package files\n");
+  //make deb package
+  printf("Make deb package\n");
+  system("dpkg -b ~/.repack/ 2> /dev/null");
+  i = copydeb(argv[1]);
+  return i;
  
 }
 int dosya_cek(char *dir){
@@ -102,7 +115,7 @@ int make_control(char *line){
     char data[50000];
     char block[]="Status:";
     if (line[0] == block[0]& line[1] == block[1]& line[2] == block[2]& line[3] == block[3]& line[4] == block[4]& line[5] == block[5]& line[6] == block[6]){
-        printf("%s\n",line);
+        printf("%s",line);
     }
     else{
         char bash[50000]="echo \"";
@@ -111,4 +124,31 @@ int make_control(char *line){
         strcat(bash,"\" >> ~/.repack/DEBIAN/control");
         system(bash);
     }
+}
+int package_file(char *name){
+    char bash[100]="cp -prf /var/lib/dpkg/info/";
+    strcat(bash,name);
+    strcat(bash,".* ~/.repack/DEBIAN/");
+    system(bash);
+    system("rm -f ~/.repack/DEBIAN/*.list 2> /dev/null");
+    system("rm -f ~/.repack/DEBIAN/*.md5sums 2> /dev/null");
+    system("rm -f ~/.repack/DEBIAN/status 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.postinst ~/.repack/DEBIAN/postinst 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.postrm ~/.repack/DEBIAN/postrm 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.prerm ~/.repack/DEBIAN/prerm 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.preinst ~/.repack/DEBIAN/preinst 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.conffiles ~/.repack/DEBIAN/conffiles 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.shlibs ~/.repack/DEBIAN/shlibs 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.symbols ~/.repack/DEBIAN/symbols 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.templates ~/.repack/DEBIAN/templates 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.config ~/.repack/DEBIAN/config 2> /dev/null");
+    system("mv ~/.repack/DEBIAN/*.triggers ~/.repack/DEBIAN/triggers 2> /dev/null");
+    return 0;
+}
+int copydeb(char *name){
+ 
+    char bash[500] = "mv -f ~/.repack.deb $(pwd)/";
+    strcat(bash,name);
+    strcat(bash,".deb");
+    return system(bash);   
 }
