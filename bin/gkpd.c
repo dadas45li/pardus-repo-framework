@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
   system("mkdir ~/.repack/DEBIAN ");
   //copy files
   int i = dosya_cek(dir);
-  printf("Copiy %d files\n",i);
+  printf("Copy %d files\n",i);
   //create control file
   i = write_control(argv[1]);
   printf("Find %d lines\n",i);
@@ -40,26 +40,21 @@ int dosya_cek(char *dir){
    FILE *file1;
    file1 = fopen(dir,"r");
    int i = 0;
-   while (fscanf(file1,"%s",b) == 1 )
+   while (fscanf(file1,"%s\n",b) == 1 )
    {
      // cp -pvf 
      char kom1[1100]="";
-     strcpy(kom1,"cp -pf ");
+     strcpy(kom1,"cp -pf \"");
      strcat(kom1,b);
-     strcat(kom1,"  ~/.repack");
+     strcat(kom1,"\"  \"~/.repack");
      strcat(kom1,b);
-     strcat(kom1," 2> /dev/null");
+     strcat(kom1,"\" 2> /dev/null");
      char kom2[1100]="";
      int status = 1;
      char *bolu = "/";
-     while (status == 1){
-       if (b[strlen(b)-1] != bolu[0]) {
+       if (b[strlen(b)-1] == bolu[0]) {
          b[strlen(b)-1]=0;
        }
-       else{
-         break;
-       }
-     }
      strcpy(kom2,"mkdir -p");
      strcat(kom2," ~/.repack");
      strcat(kom2,b);
