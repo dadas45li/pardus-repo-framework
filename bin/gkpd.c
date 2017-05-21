@@ -6,9 +6,11 @@ int write_control(char *name);
 int make_control(char *line);
 int package_file(char *name);
 int copydeb(char *name);
+char name[1000];
 char version[50];
 char arch[50];
 int main(int argc, char *argv[]){
+  strcpy(name,argv[1]);
   char dir[50]="/var/lib/dpkg/info/";
   strcat(dir,argv[1]);
   strcat(dir,".list");
@@ -29,9 +31,11 @@ int main(int argc, char *argv[]){
   i = package_file(argv[1]);
   printf("Copy package files\n");
   //make deb package
-  printf("Make deb package\n");
-  system("dpkg -b ~/.repack/ 2> /dev/null");
+  printf("Make deb package: %s_%s_%s.deb\n",name,version,arch);
+  system("dpkg -b ~/.repack/ 2> /dev/null | cat > /dev/null");
+  printf("Move package file\n");
   i = copydeb(argv[1]);
+  printf("Finish\n");
   return i;
  
 }
@@ -40,21 +44,22 @@ int dosya_cek(char *dir){
    FILE *file1;
    file1 = fopen(dir,"r");
    int i = 0;
-   while (fscanf(file1,"%s\n",b) == 1 )
+   while (fgets(b,50000,file1) != NULL )
    {
+     b[strlen(b)-1] = 0;
      // cp -pvf 
      char kom1[1100]="";
-     strcpy(kom1,"cp -pf \"");
+     strcpy(kom1,"cp -pf ");
      strcat(kom1,b);
-     strcat(kom1,"\"  \"~/.repack");
+     strcat(kom1," ~/.repack");
      strcat(kom1,b);
-     strcat(kom1,"\" 2> /dev/null");
+     strcat(kom1," 2> /dev/null");
      char kom2[1100]="";
      int status = 1;
      char *bolu = "/";
-       if (b[strlen(b)-1] == bolu[0]) {
+     while (b[strlen(b)-1] != bolu[0]){
          b[strlen(b)-1]=0;
-       }
+     }
      strcpy(kom2,"mkdir -p");
      strcat(kom2," ~/.repack");
      strcat(kom2,b);
@@ -96,7 +101,7 @@ while (status==0){
     d++;
     make_control(c);
     a=fgets(c,50000,file2);
-    if (c[0] == stop[0]& c[1] == stop[1]& c[2] == stop[2]& c[3] == stop[3]& c[4] == stop[4]& c[5] == stop[5]& c[6] == stop[6]& c[7] == stop[7])
+    if (strstr(c,stop) != NULL)
     {
       status = 1;
     }
@@ -108,11 +113,18 @@ while (status==0){
 }
 int make_control(char *line){
     char data[50000];
-    char block[]="Status:";
-    if (line[0] == block[0]& line[1] == block[1]& line[2] == block[2]& line[3] == block[3]& line[4] == block[4]& line[5] == block[5]& line[6] == block[6]){
-        printf("%s",line);
+    char tmp[50000];
+    if (strstr(line,"Architecture:") != NULL){
+        for(int i=14;i!=strlen(line)-1;i++){
+            arch[i-14]=line[i];
+        }
     }
-    else{
+    if (strstr(line,"Version:") != NULL){
+        for(int i=9;i!=strlen(line)-1;i++){
+            version[i-9]=line[i];
+        }
+    }
+    if (strstr(line,"Status:") == NULL){
         char bash[50000]="echo \"";
         line[strlen(line)-1]=0;
         strcat(bash,line);
@@ -144,6 +156,10 @@ int copydeb(char *name){
  
     char bash[500] = "mv -f ~/.repack.deb $(pwd)/";
     strcat(bash,name);
+    strcat(bash,"_");
+    strcat(bash,version);
+    strcat(bash,"_");
+    strcat(bash,arch);
     strcat(bash,".deb");
     return system(bash);   
 }
