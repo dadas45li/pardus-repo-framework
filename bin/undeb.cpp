@@ -16,11 +16,11 @@ int unpack(char *prim,char *sec){
     strcat(code,prim);
     strcat(code," ~/.undeb");
     i = system(code);
-    strcpy(code," cd ~/.undeb ; ar -x ~/.undeb/*deb ; rm -rf ~/.undeb/debian-binary ; rm -rf ~/.undeb/*.deb ; mkdir ~/.undeb/DEBIAN ; mv ~/.undeb/control.tar.* ~/.undeb/DEBIAN ; cd ~/.undeb/DEBIAN ; tar -xf ./control.tar.* ; rm -rf ./control.tar./* ; cd ../ ; tar -xf ./data.tar.* ; rm -rf ./data.tar.* ");
+    strcpy(code," cd ~/.undeb ; ar -x ~/.undeb/*deb ; rm -rf ~/.undeb/debian-binary ; rm -rf ~/.undeb/*.deb ; mkdir ~/.undeb/DEBIAN ; mv ~/.undeb/control.tar.* ~/.undeb/DEBIAN ; cd ~/.undeb/DEBIAN ; tar -xf ./control.tar.* ; rm -rf ./control.tar.* ; cd ../ ; tar -xf ./data.tar.* ; rm -rf ./data.tar.* ");
     i = system(code);
     strcpy(code,"mkdir $(pwd)/");
     strcat(code,sec);
-    strcat(code,"/ undeb/ ; mv  ~/.undeb/* $(pwd)/");
+    strcat(code,"/ ; mv  ~/.undeb/* $(pwd)/");
     strcat(code,sec);
     strcat(code,"/");
     i= system(code);
