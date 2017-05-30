@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
     char sec[100];
     strcpy(prim,argv[1]);
     strcpy(sec,argv[2]);
-    if (argv[1] == "-t")
+    if (strstr(argv[1],"-t"))
     {
         i = build(sec);
     }
